@@ -2,7 +2,7 @@ import { CopyText } from '@/components/copy-text.client';
 import { Icons } from '@/components/icons';
 import { Logo } from '@/components/logo';
 import { Menu } from '@/components/menu.client';
-import { Search } from '@/components/search';
+import { Search } from '@/components/search.client';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,7 +15,13 @@ import { Button } from '@/components/ui/button';
 import type { SidebarItem } from '@/pages/layout';
 import { useLocation } from '@ronin/blade/hooks';
 
-export const Navbar = ({ items }: { items: SidebarItem }) => {
+export const Navbar = ({
+  items,
+  pageContents,
+}: {
+  items: SidebarItem;
+  pageContents: { [href: string]: string };
+}) => {
   const pathname = useLocation().pathname;
 
   let currentItem = null;
@@ -55,7 +61,10 @@ export const Navbar = ({ items }: { items: SidebarItem }) => {
               </a>
             </Button>
           <div className="ml-auto flex items-center gap-2">
-            <Search items={items} />
+            <Search
+              items={items}
+              pageContents={pageContents}
+            />
             
             <div className="flex items-center gap-0.5">
               <p className="hidden font-mono text-xs md:block">

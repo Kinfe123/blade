@@ -1,6 +1,8 @@
 import type { CodeProps } from '@/components/code';
 import { Code } from '@/components/code';
 import { useCookie } from '@ronin/blade/hooks';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { Footer } from '@/components/footer';
 import { Heading } from '@/components/heading.client';
@@ -116,6 +118,35 @@ const DocsLayout = ({
 }) => {
   const [theme] = useCookie<Theme>('theme');
 
+  const pageContents: { [href: string]: string } = {};
+
+  const pagePaths = Object.values(menuItems).flat();
+
+  for (const page of pagePaths) {
+    const { href } = page;
+    let filePath = '';
+    const basePath = path.join(process.cwd(), 'docs', 'pages');
+
+    if (href === '/') {
+      filePath = path.join(basePath, 'index.mdx');
+    } else {
+      const fileAsMdx = path.join(basePath, `${href}.mdx`);
+      const fileAsIndexMdx = path.join(basePath, href, 'index.mdx');
+
+      if (fs.existsSync(fileAsMdx)) {
+        filePath = fileAsMdx;
+      } else if (fs.existsSync(fileAsIndexMdx)) {
+        filePath = fileAsIndexMdx;
+      }
+    }
+
+    if (filePath && fs.existsSync(filePath)) {
+      pageContents[href] = fs.readFileSync(filePath, 'utf-8');
+    } else {
+      pageContents[href] = '';
+    }
+  }
+
   const title = 'Blade Documentation';
   const description = 'Build instant web apps.';
 
@@ -154,7 +185,10 @@ const DocsLayout = ({
   return (
     <>
       <div className="relative z-10 flex min-h-svh w-full flex-col bg-background">
-        <Navbar items={menuItems} />
+        <Navbar
+          items={menuItems}
+          pageContents={pageContents}
+        />
         <div className="fixed top-24 left-6 w-fit">
           <Sidebar items={menuItems} />
         </div>
