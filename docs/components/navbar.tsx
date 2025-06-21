@@ -2,6 +2,7 @@ import { CopyText } from '@/components/copy-text.client';
 import { Icons } from '@/components/icons';
 import { Logo } from '@/components/logo';
 import { Menu } from '@/components/menu.client';
+import { Search } from '@/components/search';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -35,25 +36,33 @@ export const Navbar = ({ items }: { items: SidebarItem }) => {
         <div className="**:data-[slot=separator]:!h-4 3xl:fixed:container flex h-(--header-height) items-center gap-2 md:gap-6">
           <Logo />
           <Button
-            asChild={true}
-            variant="ghost"
-            size="icon"
-            className="w-fit px-2">
-            <a
-              href="https://github.com/ronin-co/blade"
-              target="_blank"
-              rel="noreferrer"
-              className="w-fit px-0">
-              <Icons.gitHub className="h-4 w-4" />
-              <span className="text-muted-foreground text-xs tabular-nums">213</span>
-              <span className="sr-only">GitHub</span>
-            </a>
-          </Button>
-          <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
+              asChild={true}
+              variant="ghost"
+              size="icon"
+              className="w-fit px-2"
+            >
+              <a
+                href="https://github.com/ronin-co/blade"
+                target="_blank"
+                rel="noreferrer"
+                className="w-fit px-0"
+              >
+                <Icons.gitHub className="h-4 w-4" />
+                <span className="text-muted-foreground text-xs tabular-nums">
+                  213
+                </span>
+                <span className="sr-only">GitHub</span>
+              </a>
+            </Button>
+          <div className="ml-auto flex items-center gap-2">
+            <Search items={items} />
+            
             <div className="flex items-center gap-0.5">
               <p className="hidden font-mono text-xs md:block">
                 <CopyText text="bunx @ronin/blade init">
-                  <span className="text-primary/80">$ bunx @ronin/blade init</span>
+                  <span className="text-primary/80">
+                    $ bunx @ronin/blade init
+                  </span>
                 </CopyText>
               </p>
               <Menu items={items} />
