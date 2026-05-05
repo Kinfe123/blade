@@ -1,0 +1,42 @@
+---
+title: "Deployment"
+description: "Deployment documentation explains how the product runs in previews, staging, and production."
+order: 40
+---
+
+# Deployment
+
+Deployment documentation explains how the product runs in previews, staging, and production.
+## What This Controls
+Deployment documentation explains how the project is expected to run outside local development, which platform files are authoritative, and what needs to be verified for preview, staging, and production environments.
+
+In order to deploy your Blade app to production, use your deployment provider of choice.
+## Key Ideas
+- deployment
+- containers
+- platform config
+- preview environment
+- production
+## How To Think About Settings
+Configuration is useful only when readers can connect each value to behavior. Start by deciding whether the value affects credentials, persistence, routing, framework integration, output, or developer convenience.
+## Environment Variables
+No environment variables are directly tied to this configuration page yet.
+## Configuration Files
+- `packages/blade/private/server/worker/providers/vercel.ts` (deployment) - Deployment platform configuration.
+## From The README
+The README already describes this area in project language. These excerpts are the reader-facing baseline before adding more examples.
+
+### Deploying
+In order to deploy your Blade app to production, use your deployment provider of choice.
+
+### Features
+- Native Data State Management (built in React hooks for reads and mutations)
+- Native Pagination (built in React hooks for paginating lists of records)
+- Native Styling (Support for Tailwind CSS with zero config)
+- Native Markdown (Support for MDX with zero config)
+- Client &amp; Server Components (code is not shipped to the client by default, unless you opt in)
+- Web Standard Compliant (outputs a req/res worker + static files that run anywhere — also runs in containers)
+## How To Verify Changes
+- Identify whether the option affects security, runtime mounting, data access, or presentation.
+- Prefer examples that use the same names and defaults found in the project.
+- Call out adapter-specific behavior instead of implying every setting applies to every framework.

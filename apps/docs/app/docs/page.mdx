@@ -1,0 +1,32 @@
+---
+title: "Blade"
+description: "Overview for Blade."
+order: 0
+---
+
+# Blade
+
+React at the edge.
+## What It Helps You Build
+Blade works most efficiently when using RONIN — a globally replicable database powered by SQLite.  Blade is and will always be usable with any other data source as well, however you will see performance drawbacks if that datasource isn't equally fast.
+## Start Here
+- [Quickstart](/docs/quickstart) - Run Blade for the first time.
+- [Installation](/docs/installation) - Install and configure Blade.
+## API Reference
+- [CLI](/docs/api/cli) - Commands and flags for running repository workflows from the terminal.
+- [Configuration API](/docs/api/config) - Configuration types, helpers, and contracts used by application developers.
+- [CLI Usage](/docs/api/cli/usage) - The repository exposes a command-line entrypoint and runtime flags.
+- [Runtime Config](/docs/api/config/runtime) - Runtime config defines the options developers pass when wiring the package into an application.
+## Package Details
+- Package name: `blade`
+- Runtime and adapter coverage: Hono
+## Core Capabilities
+- Client Server Components: This page explains client & server components in practical terms, including where it appears in the product and how to adopt it in a real project. Key concepts: Client, Client Server Components, Components, Server.
+- Native Data State Management: This page explains native data state management in practical terms, including where it appears in the product and how to adopt it in a real project. Key concepts: Data, Management, Native, Native Data State Management.
+- Conversation Memory: This page explains how the project keeps short-lived conversation context by user and channel. It covers history length, timeout behavior, cleanup, and why memory should stay bounded for chat products. Key concepts: chat history, session timeout, user context, channel context.
+## Useful Commands
+- `build` runs `turbo build` and creates the production build or compiled package artifacts.
+- `check` runs `biome check --error-on-warnings` and supports the project workflow.
+- `dev` runs `turbo dev --filter='./packages/*' --concurrency 24` and starts the local development workflow.
+- `test` runs `turbo test` and runs verification for expected behavior.
+- `typecheck` runs `turbo typecheck` and supports the project workflow.

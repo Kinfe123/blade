@@ -1,0 +1,34 @@
+---
+title: "Conversation Memory"
+description: "Conversation memory keeps recent messages so follow-up questions have context."
+order: 110
+---
+
+# Conversation Memory
+
+Conversation memory keeps recent messages so follow-up questions have context.
+## What You Can Do
+This page explains how the project keeps short-lived conversation context by user and channel. It covers history length, timeout behavior, cleanup, and why memory should stay bounded for chat products.
+
+The experimental React version defined in the templates is currently required.  Support for the "stable" release channel of React will follow very soon.
+## Key Ideas
+- chat history
+- session timeout
+- user context
+- channel context
+- bounded memory
+## Where You'll See It
+This page starts from the parts of the product a reader can actually recognize.
+
+- The README already calls out related context in **Temporary Limitation**.
+## How It Works
+1. Store user and assistant messages under the current user and channel.
+2. Include recent history when asking the AI provider for a follow-up answer.
+3. Drop old messages after the configured timeout or when a user clears history.
+## Behavior Details
+- Old conversations expire or are cleaned up so stale context does not leak into later answers.
+## From The README
+The README already describes this area in project language. These excerpts are the reader-facing baseline before adding more examples.
+
+### Temporary Limitation
+The experimental React version defined in the templates is currently required.  Support for the "stable" release channel of React will follow very soon.

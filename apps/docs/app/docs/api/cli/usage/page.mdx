@@ -1,0 +1,44 @@
+---
+title: "CLI Usage"
+description: "The repository exposes a command-line entrypoint and runtime flags."
+order: 80
+---
+
+# CLI Usage
+
+The repository exposes a command-line entrypoint and runtime flags.
+## Command Purpose
+The CLI entrypoint is a developer workflow. This page explains what command-line options exist, what configuration they depend on, and how to verify the command did what the repository says it does.
+## How to Run It
+Run `bun run dev` from the project root after dependencies and required environment values are ready.
+Install dependencies first with `bun install`.
+## What the Command Depends On
+The command reads environment-backed configuration. Set these values before using large runs or automation.
+- `__RENDER_DEBUG_LEVEL`
+- `NODE_ENV`
+- `npm_config_userconfig`
+## Flags and Options
+Use flags to override defaults for a specific run. Prefer the default script first, then add flags when you need a different scale, concurrency level, target, or debug mode.
+- `--force-create`
+- `--force-drop`
+- `--apply`
+- `--help`: Display this help message.
+- `--invalid-flag`
+- `--template`: &lt;name&gt;       Specify the template to use (default: basic).
+- `--version`: Output the current version of create-blade.
+- `--debug`
+- `--skip-types`
+- `--sql`
+- `--zod`
+- `--local`
+## Useful Commands
+- `dev` runs `turbo dev --filter='./packages/*' --concurrency 24` and starts the local development workflow.
+- `build` runs `turbo build` and creates the production build or compiled package artifacts.
+- `check` runs `biome check --error-on-warnings` and supports the project workflow.
+- `test` runs `turbo test` and runs verification for expected behavior.
+- `typecheck` runs `turbo typecheck` and supports the project workflow.
+## Verification Checklist
+- Confirm required environment values are present before running the command.
+- Start with the smallest safe command or script before increasing scale.
+- Use `--help` when available to confirm the flags supported by the current version.
+- Check the command output or downstream service to confirm the expected side effect happened.

@@ -1,0 +1,26 @@
+---
+title: "Core Backend Systems"
+description: "The backend page explains request handling, runtime configuration, data-facing services, and the server-side workflow behind the product."
+order: 190
+---
+
+# Core Backend Systems
+
+The backend page explains request handling, runtime configuration, data-facing services, and the server-side workflow behind the product.
+## Purpose and Scope
+This area owns request handling, runtime configuration, integrations, and data-facing behavior. It is where the product turns input into persistent state, external calls, or responses.
+## What Lives Here
+- `packages/blade/private/server/context.ts` - Repository file related to this page.
+- `packages/blade/private/server/types/index.ts` - Index type surface. It documents data shapes, provider contracts, or configuration objects.
+- `packages/blade/private/server/utils/constants.ts` - Constants utility. It supports the feature behind the scenes and is often where shared rules live.
+- `packages/blade/private/server/utils/crypto.ts` - Crypto utility. It supports the feature behind the scenes and is often where shared rules live.
+- `packages/blade/private/server/utils/data.ts` - Data utility. It supports the feature behind the scenes and is often where shared rules live.
+- `packages/blade/private/server/utils/files.ts` - Files utility. It supports the feature behind the scenes and is often where shared rules live.
+- `packages/blade/private/server/utils/pagination.ts` - Pagination utility. It supports the feature behind the scenes and is often where shared rules live.
+- `packages/blade/private/server/utils/paths.ts` - Paths utility. It supports the feature behind the scenes and is often where shared rules live.
+## Operational Shape
+- Route or API entrypoints are detected in 7 files.
+No environment variables are directly tied to the backend runtime in the current evidence set.
+## Related Areas
+- [Build System and Package Structure](/docs/build/package-structure) - The build page explains how the repository is packaged, built, exported, and prepared for local development or distribution.
+- [Frontend Application](/docs/frontend/application) - The frontend page explains the user-facing application, navigation shell, and interface workflows readers actually interact with.
