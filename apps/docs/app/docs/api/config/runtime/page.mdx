@@ -1,0 +1,28 @@
+---
+title: "Runtime Config"
+description: "Runtime config defines the options developers pass when wiring the package into an application."
+order: 90
+---
+
+# Runtime Config
+
+Runtime config defines the options developers pass when wiring the package into an application.
+## Contract
+This API reference page explains the configuration shape developers pass into the package, which options are part of the public contract, and which feature pages depend on those settings.
+## Key Ideas
+- configuration type
+- runtime options
+- validation
+- public contract
+## Configuration Entry Points
+- `blade/schema` - Configuration contract or helper export.
+## Configuration Contract
+| Contract | Use it for |
+| --- | --- |
+| `FileError` | Public contract name used by the package configuration surface. |
+| `VercelConfig` | Configuration contract used when mounting or customizing Blade. |
+| `VercelNodejsServerlessFunctionConfig` | Configuration contract used when mounting or customizing Blade. |
+## How To Use This Contract
+- Start with the exported configuration helper or type rather than copying internal schema files.
+- Keep runtime options tied to the feature, adapter, or deployment behavior they control.
+- Treat example configs as usage examples; the primary source export is the contract.

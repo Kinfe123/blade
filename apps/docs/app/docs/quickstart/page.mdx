@@ -1,0 +1,48 @@
+---
+title: "Quickstart"
+description: "Run Blade with the current scripts and configuration."
+order: 10
+---
+
+# Quickstart
+
+This is the shortest path from clone to a useful first run of Blade. The goal is not to understand every file yet; the goal is to install dependencies and run the command or package entrypoint that proves the project is alive.
+## What You Will Accomplish
+- Prepare the project with the detected package manager.
+- Review the package scripts or library entrypoint before the first run.
+- Run the primary workflow so you can confirm the project is usable before exploring advanced docs.
+## Before You Start
+This project uses `bun` as its package manager.
+No README or example environment file defines required variables, so do not treat source-only environment reads as the first-run checklist.
+## Recommended First Run
+1. Install dependencies with `bun install`.
+2. Run `bun run dev` to exercise the main workflow.
+## Useful Commands
+These commands are useful after the first run because they are the repeatable workflows available in the project.
+- `build` runs `turbo build` and creates the production build or compiled package artifacts.
+- `check` runs `biome check --error-on-warnings` and supports the project workflow.
+- `dev` runs `turbo dev --filter='./packages/*' --concurrency 24` and starts the local development workflow.
+- `test` runs `turbo test` and runs verification for expected behavior.
+- `typecheck` runs `turbo typecheck` and supports the project workflow.
+## Useful CLI Options
+- `--apply`
+- `--debug`
+- `--force-create`
+- `--force-drop`
+- `--help`: Display this help message.
+- `--invalid-flag`
+- `--local`
+- `--skip-types`
+- `--sql`
+- `--template`: &lt;name&gt;       Specify the template to use (default: basic).
+- `--version`: Output the current version of create-blade.
+- `--zod`
+## Next Places to Read
+- Blade: `docs/page.mdx`
+- Installation: `docs/installation/page.mdx`
+- Configuration: `docs/configuration/page.mdx`
+- Deployment: `docs/configuration/deployment/page.mdx`
+- API Reference: `docs/api/page.mdx`
+- CLI: `docs/api/cli/page.mdx`
+- Configuration API: `docs/api/config/page.mdx`
+- CLI Usage: `docs/api/cli/usage/page.mdx`

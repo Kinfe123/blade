@@ -1,0 +1,41 @@
+---
+title: "Client Server Components"
+description: "Client & Server Components."
+order: 120
+---
+
+# Client Server Components
+
+Client & Server Components.
+## What You Can Do
+This page explains client & server components in practical terms, including where it appears in the product and how to adopt it in a real project.
+
+Blade works most efficiently when using RONIN — a globally replicable database powered by SQLite.  Blade is and will always be usable with any other data source as well, however you will see performance drawbacks if that datasource isn't equally fast.
+## Key Ideas
+- Client
+- Client Server Components
+- Components
+- Server
+## Where You'll See It
+This page starts from the parts of the product a reader can actually recognize.
+
+- The README already calls out related context in **Features**.
+## How It Works
+1. Start with the product surface called out in the README so the user-facing goal is clear.
+2. Map the feature to the components, routes, or configuration that make it work in this repository.
+3. Use the examples and setup notes in the repo to adopt the feature in a real project.
+## From The README
+The README already describes this area in project language. These excerpts are the reader-facing baseline before adding more examples.
+
+### Features
+- Native Data State Management (built in React hooks for reads and mutations)
+- Native Pagination (built in React hooks for paginating lists of records)
+- Native Styling (Support for Tailwind CSS with zero config)
+- Native Markdown (Support for MDX with zero config)
+- Client &amp; Server Components (code is not shipped to the client by default, unless you opt in)
+- Web Standard Compliant (outputs a req/res worker + static files that run anywhere — also runs in containers)
+
+### Considerations
+- No Server Functions (instead of executing arbitrary code, the only way to invoke the server in Blade is through a mutation)
+- No Async Components (I/O leads to slow code, so reads in Blade are always synchronous, but async behind the scenes)
+- No Suspense (Blade does not support reads on the client — server components can only read and client components can only write)

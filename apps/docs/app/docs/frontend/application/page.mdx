@@ -1,0 +1,27 @@
+---
+title: "Frontend Application"
+description: "The frontend page explains the user-facing application, navigation shell, and interface workflows readers actually interact with."
+order: 210
+---
+
+# Frontend Application
+
+The frontend page explains the user-facing application, navigation shell, and interface workflows readers actually interact with.
+## Purpose and Scope
+This area owns the user-facing application: navigation, page layout, interface states, and the screens where readers or operators actually interact with the product.
+## What Lives Here
+- `packages/blade/private/client/components/history.tsx` - History reusable UI component. It renders a visible part of the workflow or a focused interaction.
+- `packages/blade/private/client/context.ts` - Repository file related to this page.
+- `packages/blade/private/client/hooks.ts` - Repository file related to this page.
+- `packages/blade/private/client/types/util.ts` - Util type surface. It documents data shapes, provider contracts, or configuration objects.
+- `packages/blade/private/client/utils/constants.ts` - Constants utility. It supports the feature behind the scenes and is often where shared rules live.
+- `packages/blade/private/client/utils/data.ts` - Data utility. It supports the feature behind the scenes and is often where shared rules live.
+- `packages/blade/private/client/utils/page.ts` - Page utility. It supports the feature behind the scenes and is often where shared rules live.
+- `packages/blade/private/client/utils/parser.ts` - Parser utility. It supports the feature behind the scenes and is often where shared rules live.
+## How It Connects
+- The frontend translates user actions into API requests, mutations, or route transitions.
+- Shared layout, navigation, and state live here so workflow pages can explain the visible product before they describe internals.
+- Reader-facing docs should start from the screen or task, then link to backend or configuration pages only when the UI depends on them.
+## Related Areas
+- [Core Backend Systems](/docs/backend/systems) - The backend page explains request handling, runtime configuration, data-facing services, and the server-side workflow behind the product.
+- [Build System and Package Structure](/docs/build/package-structure) - The build page explains how the repository is packaged, built, exported, and prepared for local development or distribution.
