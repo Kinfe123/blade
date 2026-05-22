@@ -1,0 +1,40 @@
+---
+title: "API Routes"
+description: "Reading data in Blade happens through the use hook in layouts and pages, while modifying data happens through the useMutation hook in interactive components."
+order: 40
+---
+
+# API Routes
+
+Reading data in Blade happens through the `use` hook in layouts and pages, while modifying data happens through the `useMutation` hook in interactive components. To run arbitrary code on the server for reads or mutations, Triggers can be used — most commonly Triggers of type "During".
+
+All interactions with the server from the client happen through mutations. As a result, you do not need to write REST APIs for your own Blade application to function.
+
+## When to expose a REST API
+
+The only case where exposing a REST API makes sense is when you want other clients — such as an iOS app or a third-party integration — to access your application's data. For those cases, Blade automatically generates a REST API at the URL path `/api`. It exposes your Triggers through an auto-generated request schema, which you enable by adding this export to your Trigger file:
+
+```typescript
+export const exposed = true;
+```
+
+You should never call these generated APIs from within your Blade application. Reading data through a client-side API call creates a network waterfall and a loading animation. Writing data through one requires custom client-side state management — both of which Blade's `use` and `useMutation` hooks are specifically designed to eliminate. Beyond that, Blade combines all queries from a single page render (including those across nested layouts) into one database transaction, an optimization that only applies when using those hooks directly.
+
+## Custom API routes with Hono
+
+When you need to mount an endpoint with a specific request signature that cannot be expressed through Triggers, you can add a `router.ts` file at the root of your application and export a [Hono](https://hono.dev) app from it. Blade will mount it automatically:
+
+```typescript
+import { Hono } from "hono";
+
+const app = new Hono()
+  .post('/some-path', (c) => c.text('Testing'));
+
+export default app;
+```
+
+Paths registered in this Hono app cannot interface with the rest of your Blade application in any way. They run on the same domain but are otherwise a completely separate app. Treat this escape hatch as a last resort for cases where Triggers genuinely cannot satisfy the requirement.
+
+---
+
+For background on how `useMutation` works and the write query types it exposes, see [Pages](/docs/pages/pages) and [TypeScript Client](/docs/pages/client).

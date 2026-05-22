@@ -1,0 +1,36 @@
+---
+title: "Docs"
+description: "An orientation to the Blade documentation and where to go next."
+order: 20
+---
+
+# Blade Documentation
+
+Blade is a React framework for building highly dynamic web applications. Its first load is instant and interactions are instant too — no spinners, no skeletons. By following the principles of edge compute, Blade places your application and its data as close as possible to the people who use it.
+
+## What the docs cover
+
+The documentation is organized around the things you actually build with Blade.
+
+**Get Started** walks you through creating a new project, running the development server, and deploying your first app. If you have not yet created a project, go to [Quickstart](/docs/quickstart) first.
+
+**Pages** covers everything inside a running Blade app:
+
+- [Introduction](/docs/pages) — the data model, query syntax, and how reads and writes flow through layouts and pages.
+- [Pages](/docs/pages/pages) — how Blade keeps data fresh automatically with stale-while-revalidate, and how the app and React itself are revalidated on deploy or upgrade.
+- [API Routes](/docs/pages/api-routes) — when and how to expose a REST API at `/api` for external clients, and why most apps do not need one.
+- [TypeScript Client](/docs/pages/client) — how the `ronin` package loads its token and how to batch multiple write queries into a single transaction.
+
+## Key design decisions
+
+Blade deliberately does not implement the official React Server Components specification. The practical consequences are worth knowing upfront:
+
+- **No Server Functions.** The only way to invoke the server from the client is through a mutation.
+- **No Async Components.** Reads are always synchronous from the component's point of view, but happen asynchronously behind the scenes.
+- **No Suspense.** Server components read data; client components write data. Reads on the client are not supported.
+
+These constraints are intentional. They eliminate data waterfalls by collecting all queries across layouts and pages into a single database transaction, and they keep the client bundle small by shipping no server code to the browser unless you explicitly opt in.
+
+## React version
+
+The templates currently require an experimental React version. Support for the stable React release channel will follow soon. If you scaffold a new project with `create-blade`, the correct version is already pinned in the generated `package.json`.

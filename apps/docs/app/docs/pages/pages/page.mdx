@@ -1,0 +1,108 @@
+---
+title: "Pages"
+description: "Blade intelligently keeps your data up-to-date for you, so no extra state management is needed for the output of your read queries."
+order: 60
+---
+
+# Pages
+
+## Automatic data revalidation (SWR)
+
+Blade handles keeping page data fresh without any manual state management. Under the hood it follows a stale-while-revalidate pattern, so the UI stays responsive while data refreshes silently in the background. Data is re-fetched in four situations:
+
+- When a mutation occurs — the refresh runs inside the same database transaction as the write.
+- Every 5 seconds, regardless of whether the browser window is in focus.
+- When the device comes back online after being offline.
+- When the browser window regains focus.
+
+Application-level revalidation goes further. Whenever you deploy a new version of your app, Blade detects the drift between the server and the currently loaded client, fetches the updated assets, and replaces the running UI with the new code. This currently happens immediately; a future update will restrict it to inactive windows so it never interrupts an active user.
+
+React itself participates in this cycle too. If you upgrade React, Blade unmounts the old version on the client, mounts the new version, and re-mounts your application cleanly.
+
+## MDX support
+
+Blade supports [MDX](https://mdxjs.com/) (Markdown + JSX) with zero configuration. To create an MDX page, add a file with the `.mdx` extension inside your `pages/` directory and write standard Markdown. React components can be embedded anywhere in the file.
+
+A minimal MDX page looks like this:
+
+```mdx
+---
+title: Hello World
+---
+
+# Hello World
+
+Welcome! You can use **bold**, *italic*, and [links](https://example.com).
+
+<MyComponent />
+```
+
+## Customising MDX element rendering
+
+MDX converts Markdown primitives — `#` headings, `---` dividers, and so on — into HTML elements. You can override how any of those elements render by exporting a `components` object from your `layout.tsx`. For example, the docs in this repository add anchor links to headings this way:
+
+```tsx
+import { Heading } from '@/components/heading';
+
+export const components = {
+  h1: (props) => <Heading level={1} {...props} className="scroll-mt-20" />,
+  h2: (props) => <Heading level={2} {...props} className="scroll-mt-16" />,
+};
+```
+
+## Table of contents
+
+Blade automatically extracts a table of contents from the headings in each MDX file and passes it to the layout component as the `tableOfContents` prop. The type, imported from `blade/types`, is:
+
+```ts
+import type { TableOfContents } from 'blade/types';
+```
+
+Each entry carries a `value` (heading text), a `depth`, and an optional `children` array for nested headings. A layout that renders a sidebar from this data might look like:
+
+```tsx
+import type { TableOfContents } from 'blade/types';
+
+const DocsLayout = ({
+  children,
+  tableOfContents,
+}: {
+  children: React.ReactNode;
+  tableOfContents: TableOfContents[];
+}) => {
+  return (
+    <div className="flex">
+      <aside className="w-64 border-r min-h-screen p-4">
+        <nav>
+          {tableOfContents.map((item) => (
+            <a
+              key={item.value}
+              href={`#${item.value.toLowerCase().replace(/\s+/g, '-')}`}
+              className="block py-1 text-sm"
+            >
+              {item.value}
+            </a>
+          ))}
+        </nav>
+      </aside>
+      <main className="flex-1 p-8">
+        <article className="prose max-w-none">{children}</article>
+      </main>
+    </div>
+  );
+};
+```
+
+## Typography styling
+
+For documentation-style pages, adding the `@tailwindcss/typography` plugin gives the `prose` class, which applies sensible defaults to Markdown output without additional CSS. Import it in your stylesheet:
+
+```css
+@plugin "@tailwindcss/typography";
+```
+
+Then wrap your MDX content with `<article className="prose max-w-none">` in your layout.
+
+---
+
+For how mutations trigger data refreshes on the server side, see [API Routes](/docs/pages/api-routes). For the React hooks that expose location and navigation state to pages, see [Introduction](/docs/pages).

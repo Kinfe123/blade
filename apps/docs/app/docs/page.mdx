@@ -1,0 +1,36 @@
+---
+title: "Blade"
+description: "A React framework for building instant web apps at the edge. Learn what Blade offers and where to start."
+---
+
+# Blade
+
+Blade is a React framework for building highly dynamic web applications that are fast across every dimension. The first load is instant, and so are interactions. By following the principles of edge compute, Blade pushes your application and your users' data as close to them as possible — eliminating loading spinners, skeletons, and the latency that causes them.
+
+## What Blade gives you
+
+Every feature listed below ships with zero additional configuration:
+
+- **Native Data State Management** — built-in React hooks for reads and mutations, with automatic revalidation on mutation, reconnect, and window focus.
+- **Native Pagination** — built-in React hooks for paginating lists of records.
+- **Native Styling** — Tailwind CSS works out of the box.
+- **Native Markdown** — MDX is supported without any setup.
+- **Client & Server Components** — code is not sent to the browser unless you explicitly opt a component in.
+- **No Data Waterfalls** — queries are collected across layouts and pages and executed in a single database transaction.
+- **Instant Production Builds** — powered by Rust via [Rolldown](https://rolldown.rs).
+- **Automatic REST API** — Blade generates a REST API at `/api` for any models you choose to expose.
+- **Zero Config Deployments** — Vercel, Cloudflare, and containers are all natively supported.
+
+Blade works most efficiently alongside [RONIN](https://ronin.co), a globally replicated SQLite database. It can be used with other data sources too, though performance depends on how fast those sources are.
+
+## How Blade differs from React Server Components
+
+Blade deliberately does not implement the official RSC specification. Its design choices reflect a different philosophy:
+
+- **No Server Functions** — the only way to invoke the server from a client component is through a mutation.
+- **No Async Components** — reads in Blade are always synchronous from your component's perspective, though async behind the scenes.
+- **No Suspense** — server components can only read data; client components can only write it.
+
+## A note on the React version
+
+The templates currently require the experimental React release channel. Support for the stable release channel is coming soon.
