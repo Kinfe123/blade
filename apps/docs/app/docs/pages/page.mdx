@@ -1,0 +1,84 @@
+---
+title: "Introduction"
+description: "Blade is a React framework for building highly dynamic web applications."
+order: 30
+---
+
+# Introduction
+
+Blade is a React framework for building highly dynamic web applications. Applications built with Blade are fast across all vectors: the first load is instant, and interactions are instant too.
+
+By following the principles of edge compute, Blade meets your users where they are instead of making them come to you. Your application and the data of your users are pushed as close as possible to them, avoiding loading animations of any form — no spinners, no skeletons — so the experience feels as snappy as a native app.
+
+## Data model
+
+The core of Blade is its query syntax, which allows for instantly reading and writing data. It combines common data querying patterns of web apps into a syntax that is more expressive than raw SQL, letting you express complex operations with less code.
+
+Reading a list of records looks like this:
+
+```typescript
+const records = use.accounts();
+```
+
+Writing a record looks like this:
+
+```typescript
+const { add } = useMutation();
+
+add.account.with.handle('test');
+```
+
+Blade manages the state of your data for you. Any mutation you apply is instantly reflected across all active read queries and propagated to other clients in the background, so you do not need to reach for a separate state management library or write REST APIs for your own front end.
+
+## Hooks
+
+The programmatic API of Blade revolves around React hooks:
+
+- `use` — read data in server components
+- `useMutation` — write data from client components
+- `useLocation` — mimics `window.location`
+- `useNavigator` — mimics `window.navigator`
+- `useRedirect` — transition to a different page
+- `useCookie` — read and write cookies
+- `useJWT` — read JSON Web Tokens
+- `useParams` — read dynamic path segments
+- `usePopulatePathname` — populate dynamic path segments
+- `usePagination` — get the next or previous page of records
+- `usePaginationBuffer` — concatenate paginated lists
+
+## Data storage
+
+Blade works with any fast edge database. The quickest path is to sign up for [RONIN](https://ronin.co), an SQLite-powered edge database. After signing up you receive a `RONIN_TOKEN`. Add it to a `.env` file at the root of your project:
+
+```txt
+RONIN_TOKEN=xxxxxx
+```
+
+Blade reads that file automatically and uses the token to access your SQLite database. Because every new RONIN database already contains example data, you can open `pages/index.tsx` and start querying immediately:
+
+```tsx
+import { use } from 'blade/server/hooks';
+
+const Page = () => {
+  const posts = use.posts();
+
+  return (
+    <div>
+      {posts.map(post => <h1>{post.title}</h1>)}
+    </div>
+  );
+};
+
+export default Page;
+```
+
+The `use` hook is reactive: it updates automatically when a `useMutation` call writes new data anywhere in the application, and it revalidates in the background to keep data fresh.
+
+To add new kinds of data, define a model — Blade's equivalent of a database table. Once a model is applied, it becomes available for querying straight away.
+
+## What to read next
+
+- [Quickstart](/docs/quickstart) — create and run a Blade app for the first time
+- [Pages](/docs/pages/pages) — how Blade keeps page data up-to-date with stale-while-revalidate
+- [API Routes](/docs/pages/api-routes) — when and how to expose a REST API for external clients
+- [TypeScript Client](/docs/pages/client) — configure the RONIN client and batch write queries

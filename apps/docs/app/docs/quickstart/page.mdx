@@ -1,0 +1,89 @@
+---
+title: "Quickstart"
+description: "Run Blade for the first time."
+---
+
+# Quickstart
+
+Blade is a React framework for building highly dynamic web apps at the edge. This page takes you from nothing to a running local project in four steps.
+
+## Prerequisites
+
+Blade uses [Bun](https://bun.sh) as its package manager. Install Bun before continuing. No other global tooling is required to start.
+
+One note on React versions: the templates currently require the experimental React release channel. Support for the stable channel is coming soon, so use the version pinned in the generated `package.json`.
+
+## Create a new app
+
+Scaffold a new Blade project with `create-blade`. Pass `--template` to choose between the `basic` and `advanced` starter:
+
+```bash
+bun create blade my-app
+```
+
+To see scaffolder options before running:
+
+```bash
+bun create blade --help
+bun create blade --version
+```
+
+## Install dependencies
+
+Enter the newly created directory and install:
+
+```bash
+cd my-app
+bun install
+```
+
+## Start the development server
+
+```bash
+bun run dev
+```
+
+This runs `turbo dev --filter='./packages/*' --concurrency 24` under the hood. Open the URL printed in the terminal to see your app.
+
+## Build for production
+
+When you are ready to ship, compile the application:
+
+```bash
+bun run build
+```
+
+The build runs `turbo build`, bundles dependencies with Rolldown, tree-shakes dead code, and writes the output to a `.blade` directory. That directory is what you hand to your deployment provider.
+
+To deploy to Vercel from the project directory, for example:
+
+```bash
+vercel -y
+```
+
+Blade also natively supports Cloudflare and containers without additional configuration.
+
+## Useful development commands
+
+| Command | What it does |
+|---|---|
+| `bun run dev` | Starts local dev servers with watch mode |
+| `bun run build` | Produces a production build in `.blade/` |
+| `bun run check` | Runs `biome check --error-on-warnings` for linting and formatting |
+| `bun run typecheck` | Runs TypeScript type checking across all packages |
+| `bun run test` | Runs the full test suite via Turbo |
+
+Run all of these from the repository root. To run a single test by name:
+
+```bash
+bun run test -- -t 'your test name'
+```
+
+## What to read next
+
+With the dev server running, the most useful next stops are:
+
+- [Introduction](/docs/pages) — how Blade's data model, server components, and query syntax fit together
+- [Pages](/docs/pages/pages) — how Blade keeps data fresh with automatic revalidation
+- [API Routes](/docs/pages/api-routes) — when and how to expose a REST API from your Triggers
+- [TypeScript Client](/docs/pages/client) — using the `ronin` package to read and write data

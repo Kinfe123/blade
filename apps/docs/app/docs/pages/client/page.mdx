@@ -1,0 +1,102 @@
+---
+title: "TypeScript Client"
+description: "How to configure and use the ronin TypeScript client in Blade apps, including authentication, batched transactions, fetch caching, and the config factory pattern."
+order: 50
+---
+
+# TypeScript Client
+
+The `ronin` package on npm works without any setup in most environments because the App Token is read from the `RONIN_TOKEN` environment variable automatically:
+
+```ts
+import { get } from 'ronin';
+
+// No further config needed
+const posts = await get.posts();
+```
+
+When `process.env.RONIN_TOKEN` is not available in the global scope — for example, in runtimes that do not expose Node.js primitives — pass the token explicitly using the factory function:
+
+```ts
+import roninFactory from 'ronin';
+
+const ronin = roninFactory({
+  token: 'YOUR_APP_TOKEN',
+});
+
+const posts = await ronin.get.posts();
+```
+
+Frameworks like Next.js automatically provide `process.env` on both edge and serverless runtimes, so explicit token passing is never needed there.
+
+## Batching (Transactions)
+
+Running multiple write queries — `add`, `set`, or `remove` — inside a `batch` call groups them into a single atomic database transaction. If any query fails, every other query in the same batch is rolled back, preventing partial writes.
+
+```ts
+import { batch, set, add } from 'ronin';
+
+const [account, session] = await batch(() => [
+  set.account({
+    with: { id: '1234' },
+    to: { emailVerified: true },
+  }),
+  add.session.with({
+    account: { id: '1234' },
+  }),
+]);
+```
+
+Queries execute in the order they are defined and are reverted in reverse order when an error occurs.
+
+`batch` is also useful for read queries when you want to send multiple queries in a single network request rather than one request per query:
+
+```ts
+import { batch, get } from 'ronin';
+
+const [account, session] = await batch(() => [
+  get.account.with.id('1234'),
+  get.session.with.account.id('1234'),
+]);
+```
+
+The queries above still execute serially inside RONIN, but only one outgoing request is made.
+
+## Caching
+
+For frameworks that cache outgoing `fetch` requests — such as Next.js — you can pass custom fetch options through the factory:
+
+```ts
+import roninFactory from 'ronin';
+
+const ronin = roninFactory({
+  fetch: { cache: 'force-cache' },
+});
+
+const ronin = roninFactory({
+  fetch: { next: { revalidate: 3600 } },
+});
+```
+
+For `add`, `set`, and `remove` queries, the client sets `cache: 'no-store'` by default so write operations always bypass the cache.
+
+## Config Factory
+
+When multiple queries share the same configuration, initialize `ronin` once and reuse the instance:
+
+```ts
+import roninFactory from 'ronin';
+
+const ronin = roninFactory({
+  token: 'YOUR_APP_TOKEN',
+});
+
+const posts = await ronin.get.posts();
+const reviews = await ronin.get.reviews();
+```
+
+Initializing once and passing the instance around keeps token configuration in a single place and avoids repeating it across your application.
+
+---
+
+Next, see [API Routes](/docs/pages/api-routes) to understand how Blade handles data reads and mutations from the client, or [Pages](/docs/pages/pages) for how Blade keeps query results fresh without additional state management.
