@@ -1,50 +1,25 @@
 ---
-title: API Routes
+title: "API Routes"
+description: "Reading data in Blade happens through the use hook in layouts and pages, while modifying data happens through the useMutation hook in interactive components."
+order: 2
 ---
 
 # API Routes
 
-Reading data in Blade happens through the [`use`](/hooks#use-server) hook in layouts and
-pages, while modifying data happens through the [`useMutation`](/hooks#usemutation-client) hook
-in interactive components.
+Blade is designed so that you never need to write a REST API for your own frontend. Reading data happens through the `use` hook in server components, and writing data happens through `useMutation` in client components. All server communication is channeled through mutations — there is no fetch call, no endpoint to write.
 
-To run arbitrary code on the server for reads or mutations, [Triggers](/models/triggers)
-can be used (most commonly Triggers of type "During").
+The only reason to expose a REST API is if you need to serve a third-party client: a mobile app, a partner integration, or a script that cannot use Blade's query syntax.
 
-This means that all interactions with the server from the client are happening through
-mutations. As a result, no REST APIs are required to be written.
+## Auto-Generated REST API
 
-The only case in which you should therefore consider exposing a REST API is if you would
-like other clients (such as an iOS app or a third-party app) to access your application.
-For those cases, Blade automatically generates a REST API at the URL path `/api` that
-exposes your [Triggers](/models/triggers) through an auto-generated request schema, which
-can be enabled by adding this export to your Trigger file:
-
-```typescript
-export const exposed = true;
-```
-
-In general, you should never interact with those APIs from your Blade application, since
-reading data from an API on the client-side causes a network waterfall and thereby a
-loading animation. Additionally, writing data through an API requires custom client-side
-state management, which Blade is designed to abstract away through its mutation syntax
-and automatic state management.
-
-Furthermore, Blade performs numerous internal optimizations for the [`use`](/hooks#use-server)
-and [`useMutation`](/hooks#usemutation-client) hooks, such as combining all queries of a
-page render (even across layouts) into a single database transaction for maximum
-performance efficiency.
+For those cases, Blade automatically generates a REST API at the `/api` URL path. It exposes your Triggers through an auto-generated request schema. You enable it per-model in your schema definition — no hand-written controllers needed.
 
 ## Custom API Routes
 
-It is highly recommended to rely on Blade's auto-generated REST APIs if you would like
-to expose your application's data to third-party clients, in order to keep your codebase
-as clean as possible.
-
-In the rare case that you need to mount an API with a specific request signature to your Blade application, you can add a `router.ts` file at the root of your application and place a [Hono](https://hono.dev) app inside of it, which will then be mounted by Blade:
+In the rare case that you need a specific request signature, add a `router.ts` file at the root of your project and export a [Hono](https://hono.dev) app:
 
 ```typescript
-import { Hono } from "hono";
+import { Hono } from 'hono';
 
 const app = new Hono()
   .post('/some-path', (c) => c.text('Testing'));
@@ -52,4 +27,6 @@ const app = new Hono()
 export default app;
 ```
 
-However, note that paths mounted in this Hono app cannot interface with the rest of your Blade app in any way. They are only meant to be used in edge cases where you cannot rely on Blade's [trigger](https://ronin.co/docs/models/triggers) feature. In other words, your Hono app and your Blade app are two different apps running on the same domain.
+Blade mounts this Hono app alongside your Blade app on the same domain. The two apps are independent — the Hono routes cannot reach into Blade's data layer.
+
+> **Note:** Prefer Blade's auto-generated REST API over custom routes whenever possible. Custom routes are an escape hatch for edge cases where the trigger-based approach doesn't fit.

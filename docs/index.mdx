@@ -1,0 +1,30 @@
+---
+title: "Introduction"
+description: "A React framework for building instant web apps at the edge."
+order: 0
+---
+
+# Introduction
+
+Blade is a React framework for building highly dynamic web applications where the first load is instant and every interaction is instant too. By following the principles of edge compute, Blade pushes your application and its data as close as possible to your users — eliminating loading spinners, skeletons, and data waterfalls entirely.
+
+The core of Blade is its query syntax. Reading a list of records looks like this:
+
+```typescript
+const accounts = use.accounts();
+```
+
+Writing one looks like this:
+
+```typescript
+const { add } = useMutation();
+add.account.with.handle('elaine');
+```
+
+Blade manages data state for you. Mutations are instantly reflected across all read queries and propagated to other clients in the background — no Redux, no SWR library, no REST endpoints required unless you specifically want to expose one.
+
+Blade deliberately diverges from the official React Server Components specification. There are no Server Functions, no async components, and no Suspense. Instead, server components only read and client components only write — a clear, predictable boundary that keeps I/O off the critical path.
+
+Blade works most efficiently with [RONIN](https://ronin.co), a globally replicable SQLite-powered database, but it runs with any data source.
+
+If you're new, head to [Quickstart](/docs/quickstart) to scaffold your first app in under a minute. For a deeper look at pages and revalidation, see Pages. For data access, start with [Introduction](/docs/pages).
