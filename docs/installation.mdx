@@ -1,0 +1,58 @@
+---
+title: "Installation"
+description: "Install and configure Blade."
+order: 10
+---
+
+# Installation
+
+## Prerequisites
+
+Blade works with npm, but the project itself and its CLI use [Bun](https://bun.sh) internally. You need Node.js 18+ or Bun installed to run a Blade application.
+
+## Create a new app
+
+The fastest way to get started is `create-blade`, which scaffolds a working application for you:
+
+```bash
+npm create blade
+```
+
+The scaffolder accepts two flags:
+
+- `--template` — choose between the `basic` and `advanced` starter templates. The advanced template includes dynamic routes like `/posts/[id]`.
+- `--version` — print the `create-blade` version and exit.
+- `--help` — print usage information.
+
+After the project is created, move into the new directory and install dependencies:
+
+```bash
+cd blade-example
+npm install
+```
+
+## Start the development server
+
+```bash
+npm run dev
+```
+
+The development server starts on `PORT` (defaults to a local port). Open the URL printed in your terminal to see your app.
+
+## Environment variables
+
+Set these before running the dev server or deploying:
+
+| Variable | When you need it |
+|---|---|
+| `RONIN_TOKEN` | Required when your app reads or writes data via RONIN. Set this to your RONIN App Token. |
+| `PORT` | Overrides the default local port for the development server. |
+| `BLADE_ENV` | Controls Blade's runtime mode. Typically set automatically by your deployment platform. |
+
+The following variables are read automatically when running on supported platforms and do not need to be set manually: `VERCEL_GIT_COMMIT_REF`, `VERCEL_GIT_COMMIT_SHA`, `CF_PAGES_BRANCH`, `CF_PAGES_COMMIT_SHA`, `COMMIT_REF`, `BRANCH`, `NETLIFY`, and `WORKERS_CI`.
+
+## Verify the installation
+
+Once the dev server is running, your terminal should show a local URL. Open it in your browser — you'll see the scaffolded home page rendered from `pages/index.tsx`.
+
+> **Note:** Blade currently requires the experimental React version specified in the starter templates. Support for the stable React release channel is coming soon.

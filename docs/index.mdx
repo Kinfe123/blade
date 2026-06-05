@@ -1,0 +1,17 @@
+---
+title: "Introduction"
+description: "A React framework for building instant web apps at the edge."
+order: 0
+---
+
+# Introduction
+
+Blade is a React framework for building highly dynamic web applications where the first load is instant and every interaction is instant too. It follows the principles of edge compute — your application and your users' data are pushed as close to them as possible, eliminating loading spinners, skeletons, and the latency that comes with centralized servers.
+
+The framework handles data state management, pagination, styling, and Markdown support out of the box with zero configuration. You only need `pages/index.tsx` and a `package.json` to get a Blade app running. Server-side code is never shipped to the client unless you explicitly opt in, and queries across layouts and pages are collected into a single database transaction so you never pay for data waterfalls.
+
+Blade diverges intentionally from React Server Components. Rather than server functions, it uses a structured mutation model. Rather than `Suspense` and async components, reads are always synchronous on the server and writes happen exclusively on the client. This split keeps I/O off the render path and keeps your application fast at every layer.
+
+The build pipeline is powered by Rolldown (Rust-based) for near-instant production builds. Deployments work out of the box on Vercel, Cloudflare, Netlify, containers, and any platform that can run a standard fetch-based worker.
+
+Head to [Quickstart](/docs/quickstart) to create your first app in under five minutes, or [Installation](/docs/installation) if you're adding Blade to an existing project. For a tour of pages, data, and hooks, start with [Introduction](/docs/pages).

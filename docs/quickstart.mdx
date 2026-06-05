@@ -1,0 +1,71 @@
+---
+title: "Quickstart"
+description: "Run Blade for the first time."
+order: 20
+---
+
+# Quickstart
+
+This guide takes you from zero to a running Blade app. By the end you'll have a local dev server serving a page that reads and displays data.
+
+## 1. Create the project
+
+```bash
+npm create blade
+```
+
+When prompted (or by passing `--template basic`), choose the basic template. The scaffolder creates a `blade-example` directory.
+
+## 2. Install dependencies
+
+```bash
+cd blade-example
+npm install
+```
+
+## 3. Set your RONIN token
+
+Blade works best with [RONIN](https://ronin.co) as its data layer. Add your App Token to a `.env` file in the project root:
+
+```bash
+RONIN_TOKEN=your_app_token_here
+```
+
+> **Note:** If you skip this step, the app still starts — you just won't be able to run data queries until a token is set.
+
+## 4. Start the dev server
+
+```bash
+npm run dev
+```
+
+Open the local URL printed in your terminal. You'll see the scaffolded home page from `pages/index.tsx`.
+
+## 5. Read and write your first record
+
+Open `pages/index.tsx`. Reading data in a Blade server component looks like this:
+
+```tsx
+const accounts = use.accounts();
+```
+
+To write data from an interactive component, use the `useMutation` hook:
+
+```tsx
+const { add } = useMutation();
+add.account.with.handle('alice');
+```
+
+Blade tracks the mutation and instantly reflects it across all active read queries — no extra state management needed.
+
+## 6. Build for production
+
+When you're ready to ship:
+
+```bash
+npm run build
+```
+
+This compiles your app into the `.blade` directory, bundling and minifying everything with Rolldown.
+
+From here, head to [Pages](/docs/pages/pages) to understand how Blade's page model and automatic revalidation work, or [Introduction](/docs/pages) for a full tour of the data model and available hooks.
