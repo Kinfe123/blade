@@ -1,0 +1,50 @@
+---
+title: "Introduction"
+description: "Blade is a React framework for building highly dynamic web applications."
+order: 1
+---
+
+# Introduction
+
+Blade is a React framework for building highly dynamic web applications. Applications built with Blade are fast across all vectors: the first load is instant, and interactions are instant too. By following the principles of edge compute, Blade meets your users where they are instead of making them come to you.
+
+Your application and your users' data are pushed as close to them as possible, rather than requiring them to retrieve it from a central server. In practice, this means loading animations of any form — spinners, skeletons — are avoided, delivering the snappy, native-feeling experience end users expect.
+
+## Data Model
+
+The core of Blade is its query syntax, which lets you instantly read and write data. It combines common data-querying patterns of web apps into a syntax more expressive than SQL, letting you accomplish complex operations with less code.
+
+Reading a list of records from a server component looks like this:
+
+```tsx
+const accounts = use.accounts();
+```
+
+Writing a record from an interactive client component looks like this:
+
+```tsx
+const { add } = useMutation();
+add.account.with.handle('alice');
+```
+
+Blade manages the state of your data for you. Any mutation you apply is instantly reflected across all active read queries and propagated to other clients in the background.
+
+## Hooks
+
+The majority of Blade's programmatic API revolves around React hooks:
+
+- `use` — read data in server components
+- `useMutation` — write data from client components
+- `useLocation` — mimics `window.location`
+- `useParams` — read dynamic path segments
+- `useRedirect` — navigate to another page
+- `useCookie` — read and write cookies
+- `useJWT` — read JSON Web Tokens
+- `usePagination` — get the next or previous page of records
+- `usePaginationBuffer` — concatenate paginated lists
+
+## Design Choices
+
+Blade purposefully does not follow the official React Server Components specification. Instead of server functions, the only way to invoke the server is through a mutation. Reads are always synchronous on the server (but async behind the scenes), so there are no async components and no Suspense boundaries. This keeps I/O off the render path and your UI predictably fast.
+
+To start building, see [Quickstart](/docs/quickstart), or continue reading about [Pages](/docs/pages/pages), Hooks, and the Data Model.

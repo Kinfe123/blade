@@ -1,55 +1,36 @@
 ---
-title: API Routes
+title: "API Routes"
+description: "When and how to expose a REST API from your Blade application."
+order: 8
 ---
 
 # API Routes
 
-Reading data in Blade happens through the [`use`](/hooks#use-server) hook in layouts and
-pages, while modifying data happens through the [`useMutation`](/hooks#usemutation-client) hook
-in interactive components.
+Reading data in Blade happens through the `use` hook in layouts and pages. Writing data happens through the `useMutation` hook in interactive components. Because all client-to-server communication flows through mutations, you don't need to write REST APIs for your own application's UI.
 
-To run arbitrary code on the server for reads or mutations, [Triggers](/models/triggers)
-can be used (most commonly Triggers of type "During").
+The only reason to expose a REST API is when an external client — an iOS app, a third-party integration, or a webhook consumer — needs to access your data.
 
-This means that all interactions with the server from the client are happening through
-mutations. As a result, no REST APIs are required to be written.
+## Auto-generated REST API
 
-The only case in which you should therefore consider exposing a REST API is if you would
-like other clients (such as an iOS app or a third-party app) to access your application.
-For those cases, Blade automatically generates a REST API at the URL path `/api` that
-exposes your [Triggers](/models/triggers) through an auto-generated request schema, which
-can be enabled by adding this export to your Trigger file:
+Blade automatically generates a REST API at `/api` for any models you choose to expose. The request schema is derived from your Triggers, so no extra work is needed beyond defining the trigger and enabling the REST surface in your model definition.
 
-```typescript
-export const exposed = true;
-```
+## Custom API routes with Hono
 
-In general, you should never interact with those APIs from your Blade application, since
-reading data from an API on the client-side causes a network waterfall and thereby a
-loading animation. Additionally, writing data through an API requires custom client-side
-state management, which Blade is designed to abstract away through its mutation syntax
-and automatic state management.
+For edge cases where you need a specific request signature that Blade's auto-generated API doesn't cover, create a `router.ts` file at the root of your project and export a [Hono](https://hono.dev) app:
 
-Furthermore, Blade performs numerous internal optimizations for the [`use`](/hooks#use-server)
-and [`useMutation`](/hooks#usemutation-client) hooks, such as combining all queries of a
-page render (even across layouts) into a single database transaction for maximum
-performance efficiency.
-
-## Custom API Routes
-
-It is highly recommended to rely on Blade's auto-generated REST APIs if you would like
-to expose your application's data to third-party clients, in order to keep your codebase
-as clean as possible.
-
-In the rare case that you need to mount an API with a specific request signature to your Blade application, you can add a `router.ts` file at the root of your application and place a [Hono](https://hono.dev) app inside of it, which will then be mounted by Blade:
-
-```typescript
-import { Hono } from "hono";
+```ts
+import { Hono } from 'hono';
 
 const app = new Hono()
-  .post('/some-path', (c) => c.text('Testing'));
+  .post('/some-path', (c) => c.text('Hello from custom route'));
 
 export default app;
 ```
 
-However, note that paths mounted in this Hono app cannot interface with the rest of your Blade app in any way. They are only meant to be used in edge cases where you cannot rely on Blade's [trigger](https://ronin.co/docs/models/triggers) feature. In other words, your Hono app and your Blade app are two different apps running on the same domain.
+Blade mounts this Hono app alongside your application on the same domain. Note that routes defined here cannot interface with the rest of your Blade app — they have no access to the Blade query system or data layer. Think of it as a separate app sharing a domain.
+
+> **Note:** Use the auto-generated REST surface whenever possible. The custom Hono router is for situations where you have no alternative, such as implementing a webhook receiver with a specific payload shape.
+
+## Next steps
+
+See Triggers to add the server-side logic that powers your REST API, or [TypeScript Client](/docs/pages/client) to query RONIN directly from outside a Blade app.
