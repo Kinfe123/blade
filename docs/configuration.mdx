@@ -1,0 +1,79 @@
+---
+title: "Configuration"
+description: "Environment, database, deployment, and framework settings required to run Blade."
+order: 0
+---
+
+# Configuration
+
+Blade is intentionally zero-config for the common case — a single `pages/index.tsx` and a `package.json` are enough to get it running. This page covers every knob you actually need to touch for local development, testing, and production.
+
+## Environment variables
+
+Blade reads a set of environment variables at build and runtime. The most important ones are:
+
+**Required for data access**
+
+- `RONIN_TOKEN` — your RONIN app token. Blade uses this to authenticate all `use` and `useMutation` queries against the RONIN data worker. The CLI also uses this token when running schema migrations. Without it, queries fail.
+
+**Automatically set by Blade**
+
+- `BLADE_ENV` — set to `development` when running the dev server and `production` after a build. You cannot override this manually; Blade will warn and exit if you try.
+- `PORT` — the port the dev server listens on.
+
+**Set by your deployment platform (read-only)**
+
+Blade reads these to expose the required value and the required value inside your application:
+
+- `CF_PAGES_BRANCH`, `CF_PAGES_COMMIT_SHA` — populated by Cloudflare Pages
+- `BRANCH`, `COMMIT_REF` — populated by Netlify
+- `VERCEL_GIT_COMMIT_REF`, `VERCEL_GIT_COMMIT_SHA` — populated by Vercel
+
+**Platform detection (read-only)**
+
+- `WORKERS_CI` — set by Cloudflare; Blade uses this to select the `cloudflare` provider
+- `NETLIFY` — set by Netlify; Blade uses this to select the `netlify` provider
+
+For local development, place your variables in a `.env` file at the project root:
+
+```bash
+RONIN_TOKEN=your_token_here
+```
+
+## Custom Hono router
+
+Blade mounts a Hono app internally. If you need to add custom routes (for webhooks, OAuth callbacks, or external API integrations), create a `router.ts` file at the project root and export a Hono app from it:
+
+```ts
+import { Hono } from 'hono';
+
+const app = new Hono()
+  .post('/webhooks/stripe', async (c) => {
+    // handle webhook
+    return c.json({ ok: true });
+  });
+
+export default app;
+```
+
+Blade detects `router.ts` automatically and mounts it alongside the page router. Routes in this file cannot directly call Blade's read/write hooks — they run as a separate Hono layer on the same domain.
+
+## Styling
+
+Blade includes zero-config [Tailwind CSS](https://tailwindcss.com) support. Create a `styles.css` file at the project root to customize or extend the default theme:
+
+```css
+@import 'tailwindcss';
+
+/* your customizations */
+```
+
+If `styles.css` is absent, Blade generates a default `@import 'tailwindcss'` stylesheet automatically.
+
+## Build output
+
+Running `npm run build` (or `blade build`) produces a `.blade/` directory containing:
+
+- A bundled edge worker JS file
+- Static client assets under `.blade/client/`
+- A `public/` copy of your static files

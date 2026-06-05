@@ -1,0 +1,58 @@
+---
+title: "Introduction"
+description: "Blade is a React framework for building highly dynamic web applications at the edge."
+order: 0
+---
+
+# Introduction
+
+Blade is a React framework for building highly dynamic web applications. Applications built with Blade are fast across all vectors: the first load is instant, and every interaction is instant too.
+
+By following the principles of edge compute, Blade meets your users where they are. Your application and its data are pushed as close as possible to each user, instead of requiring them to wait for a round trip to a distant origin. In practice, this means loading animations of any form — spinners, skeletons — are eliminated entirely.
+
+## Data model
+
+The core of Blade is its query syntax, which allows for instantly reading and writing data in the most natural way possible. In its simplest form, reading a list of records looks like this:
+
+```tsx
+const posts = use.posts();
+```
+
+Writing a record looks like this:
+
+```tsx
+const { add } = useMutation();
+
+add.post.with({ title: 'Hello world' });
+```
+
+Blade manages data state for you. Any mutation is instantly reflected across all `use` queries and propagated to other clients in the background. You never need a state management library, a loading indicator, or a manual cache invalidation call.
+
+## Hooks
+
+The majority of Blade's programmatic API revolves around React hooks:
+
+- `use` — read data (server only)
+- `useMutation` — write data (client only)
+- `useLocation` — the current URL
+- `useParams` — dynamic path segments
+- `useRedirect` — navigate to a page
+- `useCookie` — read and write cookies
+- `useJWT` — read JSON Web Tokens
+- `usePagination` — paginate a list of records
+- `usePaginationBuffer` — concatenate paginated pages
+- `useQueryState` — URL-backed state
+
+## Intentional constraints
+
+Blade purposefully does not comply with the React Server Components specification because it provides different solutions to the same problems:
+
+- **No Server Functions** — the only way to invoke the server from a client component is through `useMutation`.
+- **No async components** — reads in Blade are always synchronous from the component's perspective (async behind the scenes).
+- **No Suspense** — server components only read, client components only write.
+
+These constraints keep the mental model small and make performance predictable.
+
+## Data storage
+
+Blade works with any fast edge database. The recommended option is [RONIN](https://ronin.co) — an SQLite-powered globally-replicated database. Add a `RONIN_TOKEN` to your `.env` file and Blade connects automatically.

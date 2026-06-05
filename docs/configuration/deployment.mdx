@@ -1,0 +1,78 @@
+---
+title: "Deployment"
+description: "How Blade builds and deploys to Vercel, Cloudflare, Netlify, and other platforms."
+order: 1
+---
+
+# Deployment
+
+Blade was designed to deploy anywhere that can run a web-standard request/response handler. The build output is a single bundled edge worker plus static assets. Platform-specific transformation happens automatically during the build step based on which provider is detected.
+
+## Build first
+
+Before deploying, compile your app:
+
+```bash
+npm run build
+```
+
+This generates `.blade/` with the bundled worker and static files. Every deployment workflow starts from this output.
+
+## Vercel
+
+To deploy:
+
+```bash
+vercel -y
+```
+
+Vercel picks up the `.vercel/output/` directory that Blade writes during the build. The worker is deployed as a Node.js serverless function at the root route, and static assets are served from Vercel's CDN.
+
+> **Note:** The Vercel integration uses `@hono/node-server/vercel` to adapt the Hono app to the Vercel runtime.
+
+## Cloudflare Pages
+
+Blade detects Cloudflare from the `WORKERS_CI` environment variable and writes a `wrangler.jsonc` config if one is not already present. It also emits `_headers` and `.assetsignore` files.
+
+If Wrangler is not configured yet, Blade creates a default `wrangler.jsonc` pointing at `.blade/edge-worker.js`. To deploy:
+
+```bash
+wrangler pages deploy .blade
+```
+
+Or connect your repository to Cloudflare Pages and set the build command to `npm run build` with the output directory set to `.blade`.
+
+## Netlify
+
+Blade detects Netlify from the `NETLIFY` environment variable and writes an edge function under `.netlify/v1/edge-functions/worker.js`. Static assets are explicitly excluded from the edge function route so they are served directly from Netlify's CDN.
+
+Connect your repo to Netlify, set the build command to `npm run build`, and deploy. No additional configuration is required.
+
+## Containers and self-hosted environments
+
+For any environment that supports Node.js, you can serve the compiled app with:
+
+```bash
+blade serve
+```
+
+This starts a Hono-based HTTP server that serves static files and proxies page requests to the compiled worker. Set `PORT` to control the listening port. This mode is suitable for Docker containers, Railway, Fly.io, and similar platforms.
+
+## Supported deployment providers
+
+The `DeploymentProvider` type in the framework enumerates all supported targets:
+
+```ts
+type DeploymentProvider =
+  | 'cloudflare'
+  | 'edge-worker'
+  | 'netlify'
+  | 'service-worker'
+  | 'vercel';
+```
+
+During development and with `blade serve`, the `edge-worker` provider is used. In the browser in production, the `service-worker` provider handles client-side navigation.
+
+## Environment variables for deployment
+
+The only environment variable you typically need to set manually in your deployment platform is `RONIN_TOKEN`. All other variables (`VERCEL`, `CF_PAGES_BRANCH`, etc.) are injected by the platform automatically.

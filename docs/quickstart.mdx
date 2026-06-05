@@ -1,0 +1,132 @@
+---
+title: "Quickstart"
+description: "Run Blade for the first time."
+order: 20
+---
+
+# Quickstart
+
+This guide takes you from zero to a running Blade app with live data. You'll create a project, connect a database, display records, and make a write mutation — the complete read/write loop that every Blade app is built on.
+
+## 1. Create your project
+
+```bash
+npm create blade
+```
+
+Follow the prompts. A directory named `blade-example` is created. Enter it and install dependencies:
+
+```bash
+cd blade-example
+npm install
+```
+
+## 2. Add your database token
+
+Create a `.env` file in the project root:
+
+```bash
+RONIN_TOKEN=your_ronin_token_here
+```
+
+You can get a token by signing up at [ronin.co](https://ronin.co). If you skip this step, Blade still starts, but queries to RONIN will fail until the token is set.
+
+## 3. Start the dev server
+
+```bash
+npm run dev
+```
+
+Your app is now live at `http://localhost:3000`.
+
+## 4. Read data on the server
+
+Open `pages/index.tsx`. The `use` hook reads data synchronously in server components. Blade collects all `use` calls across layouts and pages into a single database transaction — no waterfalls.
+
+```tsx
+import { use } from 'blade/server/hooks';
+
+const Page = () => {
+  const posts = use.posts();
+
+  return (
+    <ul>
+      {posts.map(post => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+};
+
+export default Page;
+```
+
+## 5. Write data from the client
+
+Client components end in `.client.tsx`. The `useMutation` hook exposes `add`, `set`, `remove`, and `batch`. When a mutation runs, Blade automatically re-fetches all affected `use` queries and streams the updated UI — no manual cache invalidation.
+
+```tsx
+// components/add-post.client.tsx
+import { useMutation } from 'blade/client/hooks';
+
+export const AddPost = () => {
+  const { add } = useMutation();
+
+  return (
+    <button
+      onClick={() => add.post.with({ title: 'New post' })}
+    >
+      Add post
+    </button>
+  );
+};
+```
+
+Then render it in your server page:
+
+```tsx
+import { use } from 'blade/server/hooks';
+import { AddPost } from '../components/add-post.client';
+
+const Page = () => {
+  const posts = use.posts();
+
+  return (
+    <>
+      <AddPost />
+      <ul>
+        {posts.map(post => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    </>
+  );
+};
+
+export default Page;
+```
+
+## 6. Build and deploy
+
+When you're ready to ship:
+
+```bash
+npm run build
+```
+
+The output lands in `.blade/`. From there, run `vercel -y` for Vercel, push to Cloudflare Pages, or serve with any platform that can run an edge worker. Blade detects the provider automatically from environment variables.
+
+## Next steps
+
+## First working run
+Use the repository's checked-in package metadata to run Blade locally. These commands are grounded in the detected package manager and scripts, so they are the safest first path before adding deployment-specific options.
+```bash
+bun install
+bun run dev
+```
+
+## Verify the run
+After the local workflow starts, run the repository's verification script before changing configuration. This catches build, type, or test failures while you still have the smallest possible setup.
+```bash
+bun run build
+```

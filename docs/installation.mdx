@@ -1,0 +1,81 @@
+---
+title: "Installation"
+description: "Install and configure Blade."
+order: 10
+---
+
+# Installation
+
+Blade is scaffolded with `create-blade`, a project generator that produces a minimal working app. You do not install Blade into an existing React project — you create a new Blade project and add your code there.
+
+## Prerequisites
+
+- **Bun** (recommended) or Node.js 18+
+- A terminal with `npm`, `bun`, or `pnpm` available
+
+> **Note:** The templates currently require an experimental React version. Stable React support is coming soon.
+
+## Create a new project
+
+```bash
+npm create blade
+```
+
+This command scaffolds a new directory (`blade-example` by default) with two available templates: `basic` (a minimal starting point) and `advanced` (includes posts and client components). To pick a template explicitly, pass the `--template` flag:
+
+```bash
+npm create blade --template basic
+```
+
+Once the directory is created, install dependencies:
+
+```bash
+cd blade-example
+npm install
+```
+
+## Start the development server
+
+```bash
+npm run dev
+```
+
+Blade starts a local edge worker and serves your app. The dev server supports hot reload.
+
+## Connect a database
+
+Blade works best with [RONIN](https://ronin.co), an SQLite-powered globally-replicated database. After signing up, add your token to a `.env` file in the project root:
+
+```bash
+RONIN_TOKEN=your_token_here
+```
+
+Blade reads this automatically. You can then query data in any page:
+
+```tsx
+import { use } from 'blade/server/hooks';
+
+const Page = () => {
+  const posts = use.posts();
+
+  return (
+    <div>
+      {posts.map(post => <h1 key={post.id}>{post.title}</h1>)}
+    </div>
+  );
+};
+
+export default Page;
+```
+
+## Verify your setup
+
+After `npm run dev` starts without errors, open [http://localhost:3000](http://localhost:3000). If the page renders, the framework is wired up correctly.
+
+To build for production:
+
+```bash
+npm run build
+```
+
+This generates the `.blade/` output directory with a bundled edge worker and static assets.

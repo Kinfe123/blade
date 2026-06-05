@@ -1,0 +1,34 @@
+---
+title: "Introduction"
+description: "A React framework for building instant web apps at the edge."
+order: 0
+---
+
+# Introduction
+
+Blade is a React framework for building instant web applications. It pushes your app and your users' data to the edge so the first load is immediate, interactions never cause a loading spinner, and mutations reflect everywhere without manual state management.
+
+The core idea is simple: server components read data synchronously using the `use` hook, client components write data using `useMutation`, and Blade handles revalidation, batching, and streaming automatically. You never write a REST API for your own frontend.
+
+## Why Blade is different
+
+Most React frameworks ask you to choose between full server-side rendering with async waterfalls or client-side rendering with loading skeletons. Blade eliminates that tradeoff. All `use` queries across every layout and page are collected into a single database transaction before any rendering begins, so nothing ever waits on another read.
+
+Blade also intentionally departs from the React Server Components specification. It has no Server Functions, no async components, and no Suspense. Reads are always synchronous from the component's perspective; writes always go through `useMutation`. This constraint keeps the mental model small.
+
+## Packages
+
+The monorepo is built with Bun and Turborepo and publishes several packages:
+
+- **`blade`** — the core framework (server worker, shell, build tooling)
+- **`blade-client`** — the TypeScript query client (`get`, `set`, `add`, `remove`, `count`, `batch`)
+- **`blade-cli`** — the `blade` CLI for schema diffing and migrations
+- **`blade-syntax`** — the proxy-based query syntax and schema primitives
+- **`blade-compiler`** — SQL statement compiler for RONIN queries
+- **`create-blade`** — project scaffolder (`npm create blade`)
+- **`blade-hono`** — Hono middleware adapter
+- **`blade-better-auth`** — Better Auth adapter
+
+## Deployment targets
+
+Blade builds a platform-agnostic output in `.blade/` and natively transforms it for Vercel, Cloudflare Pages, and Netlify with zero configuration. The provider is detected automatically from environment variables (`VERCEL`, `WORKERS_CI`, `NETLIFY`). For any other host that can run a Node.js or edge worker, you use `blade serve` or mount the compiled worker directly.

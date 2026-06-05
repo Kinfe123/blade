@@ -1,0 +1,45 @@
+{
+  "$schema": "https://docs.farming-labs.dev/schema/docs.json",
+  "version": 1,
+  "docs": {
+    "mode": "frameworkless",
+    "runtime": "nextjs",
+    "root": ".docs/site"
+  },
+  "content": {
+    "docsRoot": "docs",
+    "apiReferenceRoot": "api-reference",
+    "openapi": []
+  },
+  "site": {
+    "name": "Bladeone",
+    "title": "BladeOne | Next-Gen Security",
+    "url": "https://bladeone.com/",
+    "language": "en",
+    "favicon": "https://bladeone.com/wp-content/uploads/2025/08/cropped-Blade-One-1-icon-01-180x180.png",
+    "keywords": []
+  },
+  "branding": {
+    "icon": "https://bladeone.com/wp-content/uploads/2025/08/cropped-Blade-One-1-icon-01-180x180.png",
+    "favicon": "https://bladeone.com/wp-content/uploads/2025/08/cropped-Blade-One-1-icon-01-180x180.png"
+  },
+  "links": {
+    "website": "https://bladeone.com/"
+  },
+  "cloud": {
+    "apiKey": {
+      "env": "DOCS_CLOUD_API_KEY"
+    },
+    "preview": {
+      "enabled": true
+    },
+    "publish": {
+      "mode": "draft-pr",
+      "baseBranch": "main"
+    },
+    "analytics": {
+      "enabled": true,
+      "includeInputs": false
+    }
+  }
+}
