@@ -1,55 +1,71 @@
 ---
-title: API Routes
+title: "API Routes"
+description: "How Blade handles server interactions, when to expose a REST API, and how to add custom routes."
+order: 3
 ---
 
 # API Routes
 
-Reading data in Blade happens through the [`use`](/hooks#use-server) hook in layouts and
-pages, while modifying data happens through the [`useMutation`](/hooks#usemutation-client) hook
-in interactive components.
+In Blade, all interactions with the server flow through two hooks: `use` for reads and `useMutation` for writes. This means you almost never need to write a REST API for your own frontend — Blade handles the transport for you.
 
-To run arbitrary code on the server for reads or mutations, [Triggers](/models/triggers)
-can be used (most commonly Triggers of type "During").
+## How data flows
 
-This means that all interactions with the server from the client are happening through
-mutations. As a result, no REST APIs are required to be written.
+Reads happen on the server through the `use` hook in layouts and pages. Writes happen from client components through `useMutation`. To run arbitrary server-side logic alongside a read or write, you use Triggers (most commonly a `during` trigger).
 
-The only case in which you should therefore consider exposing a REST API is if you would
-like other clients (such as an iOS app or a third-party app) to access your application.
-For those cases, Blade automatically generates a REST API at the URL path `/api` that
-exposes your [Triggers](/models/triggers) through an auto-generated request schema, which
-can be enabled by adding this export to your Trigger file:
+Blade combines all `use` queries on a page into a single database transaction. When a `useMutation` call runs, Blade adds the necessary re-fetch queries to the same transaction, so the UI update and the data write are atomic.
 
-```typescript
+## When to expose a REST API
+
+You should expose a REST API only when an external client — a mobile app, a third-party integration, or another service — needs to access your data.
+
+For those cases, Blade auto-generates a REST API at `/api` for any Trigger file that opts in:
+
+```ts
+// triggers/post.ts
 export const exposed = true;
+
+export const duringAdd = (query, multiple, options) => {
+  // validate and run the query
+  return query;
+};
 ```
 
-In general, you should never interact with those APIs from your Blade application, since
-reading data from an API on the client-side causes a network waterfall and thereby a
-loading animation. Additionally, writing data through an API requires custom client-side
-state management, which Blade is designed to abstract away through its mutation syntax
-and automatic state management.
+Adding `export const exposed = true` makes Blade expose the Trigger's schema at `/api/post`. You should never call these APIs from within your own Blade application — doing so introduces a network round trip and loses the batching benefit.
 
-Furthermore, Blade performs numerous internal optimizations for the [`use`](/hooks#use-server)
-and [`useMutation`](/hooks#usemutation-client) hooks, such as combining all queries of a
-page render (even across layouts) into a single database transaction for maximum
-performance efficiency.
+## Custom routes with Hono
 
-## Custom API Routes
+In rare cases where you need a route with a specific request signature (for example, a Stripe webhook), add a `router.ts` file at the project root:
 
-It is highly recommended to rely on Blade's auto-generated REST APIs if you would like
-to expose your application's data to third-party clients, in order to keep your codebase
-as clean as possible.
-
-In the rare case that you need to mount an API with a specific request signature to your Blade application, you can add a `router.ts` file at the root of your application and place a [Hono](https://hono.dev) app inside of it, which will then be mounted by Blade:
-
-```typescript
-import { Hono } from "hono";
+```ts
+import { Hono } from 'hono';
 
 const app = new Hono()
-  .post('/some-path', (c) => c.text('Testing'));
+  .post('/webhooks/stripe', async (c) => {
+    const payload = await c.req.json();
+    // handle the webhook
+    return c.json({ received: true });
+  });
 
 export default app;
 ```
 
-However, note that paths mounted in this Hono app cannot interface with the rest of your Blade app in any way. They are only meant to be used in edge cases where you cannot rely on Blade's [trigger](https://ronin.co/docs/models/triggers) feature. In other words, your Hono app and your Blade app are two different apps running on the same domain.
+Blade mounts this Hono app on the same domain as your pages. Routes in this file cannot call Blade's `use` or `useMutation` hooks — they are a separate layer.
+
+> **Note:** Custom routes and Blade pages are intentionally isolated. The Hono app handles its own routes; Blade pages handle everything else. Do not try to bridge them by importing page hooks into the router.
+
+## Triggers
+
+Triggers are TypeScript functions that run when a particular query type executes. They live in a `triggers/` directory at the project root, with one file per model slug:
+
+```ts
+// triggers/post.ts
+import type { DuringAddTrigger } from 'blade/types';
+
+export const add: DuringAddTrigger = (query, multiple, options) => {
+  // validate the incoming `add.post` query
+  // or run additional queries inside the same transaction
+  return query;
+};
+```
+
+Triggers can be typed as `before`, `during`, `after`, `resolving`, or `following`, each running at a different point in the query lifecycle. The `during` trigger is the most common — it intercepts the query and can modify it or replace it entirely.
