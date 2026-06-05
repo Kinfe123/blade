@@ -1,0 +1,77 @@
+---
+title: "Quickstart"
+description: "Run Blade for the first time."
+order: 20
+---
+
+# Quickstart
+
+This guide takes you from zero to a running Blade application. By the end you'll have a local dev server, a working page, and an understanding of how reads and writes fit together.
+
+## 1. Scaffold the project
+
+```bash
+npm create blade
+```
+
+When the command finishes it prints the name of the directory it created — typically `blade-example`.
+
+## 2. Install dependencies and start
+
+```bash
+cd blade-example
+npm install
+npm run dev
+```
+
+## 3. Read data in a page
+
+Open `pages/index.tsx`. Server components use the `use` hook to read data synchronously — no `async`/`await`, no `useEffect`:
+
+```tsx
+export default function Home() {
+  const posts = use.posts();
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+Blade collects all `use` calls across your layouts and pages and resolves them in a single database transaction before the page renders.
+
+## 4. Write data in a client component
+
+Client components — files ending in `.client.tsx` — can use `useMutation` to write data:
+
+```tsx
+'use client';
+
+export default function AddPost() {
+  const { add } = useMutation();
+
+  return (
+    <button onClick={() => add.post.with({ title: 'Hello world' })}>
+      Add post
+    </button>
+  );
+}
+```
+
+After the mutation, Blade automatically refreshes every affected read query — no manual state updates needed.
+
+## 5. Deploy
+
+When you're ready to go live, deploy with a single command. For Vercel:
+
+```bash
+vercel -y
+```
+
+Blade's build output is a platform-agnostic worker plus static files, so it runs on Vercel, Cloudflare Pages, Netlify, containers, and more without extra configuration.
+
+From here, read Pages to understand revalidation and MDX support, or [API Routes](/docs/pages/api-routes) to learn when and how to expose a REST endpoint.

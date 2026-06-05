@@ -1,0 +1,54 @@
+---
+title: "Introduction"
+description: "Blade is a React framework for building highly dynamic web applications."
+order: 0
+---
+
+# Introduction
+
+Blade is a React framework for building highly dynamic web applications. Applications built with Blade are fast across all vectors: the first load is instant, and interactions are instant too. By following the principles of edge compute, Blade meets your users where they are instead of making them come to you.
+
+In practice this means no loading spinners, no skeleton screens, and no data waterfalls. The experience feels like a native app.
+
+## Data Model
+
+The core of Blade is its query syntax, which lets you read and write data in a way that is more expressive than SQL while requiring far less code. In its simplest form, reading a list of records looks like this:
+
+```typescript
+const records = use.accounts();
+```
+
+Writing a record looks like this:
+
+```typescript
+const { add } = useMutation();
+add.account.with.handle('test');
+```
+
+Blade manages data state automatically. Any mutation you apply is instantly reflected across all read queries and propagated to other clients in the background — no data state management library, no REST API layer, and no React server functions required.
+
+## Hooks
+
+Most of Blade's programmatic API is built around React hooks:
+
+- `use` — Read data in server components.
+- `useMutation` — Write data in client components.
+- `useLocation` — Mimics `window.location`, exposing the current URL.
+- `useRedirect` — Navigate to a different page programmatically.
+- `useParams` — Read dynamic path segments from the URL.
+- `usePagination` — Fetch the next or previous page of records.
+- `usePaginationBuffer` — Concatenate paginated lists into a single array.
+- `useCookie` — Read and write cookies.
+- `useJWT` — Read JSON Web Tokens.
+
+For full details on each hook, see Hooks.
+
+## Design Principles
+
+Blade deliberately diverges from the official React Server Components specification because it provides different solutions to the same problems:
+
+- **No Server Functions** — The only way to invoke the server from the client is through a mutation.
+- **No Async Components** — Reads are always synchronous from the component's perspective, but resolved asynchronously behind the scenes to avoid blocking.
+- **No Suspense** — Server components only read; client components only write. This boundary is clear and intentional.
+
+These constraints keep your application predictable and your bundle small.

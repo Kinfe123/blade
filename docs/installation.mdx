@@ -1,0 +1,62 @@
+---
+title: "Installation"
+description: "Install and configure Blade."
+order: 10
+---
+
+# Installation
+
+## Prerequisites
+
+Blade uses [Bun](https://bun.sh) as its package manager and runtime. Install it first if you haven't already:
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+You can also use npm or any other Node-compatible package manager — the `create-blade` scaffolder works with all of them.
+
+## Create a new app
+
+The fastest way to start is with the `create-blade` scaffolder, which sets up a working project for you:
+
+```bash
+npm create blade
+```
+
+Pass `--template` to choose a starting point:
+
+```bash
+npm create blade -- --template advanced
+```
+
+The `basic` template gives you a single `pages/index.tsx` and a `package.json` — that is genuinely all Blade needs to run. The `advanced` template adds dynamic routes and a posts index.
+
+## Install dependencies
+
+After the scaffolder finishes, move into your new directory and install:
+
+```bash
+cd blade-example
+npm install
+```
+
+## Start the development server
+
+```bash
+npm run dev
+```
+
+The dev server starts and watches your `pages/` directory. Edit `pages/index.tsx` and the browser updates immediately.
+
+> **Note:** Blade currently requires the experimental React version pinned in the templates. Stable React support is coming soon.
+
+## Environment variables
+
+Blade reads a small set of environment variables at runtime. For local development you generally don't need to set any of them, but `RONIN_TOKEN` is required if your app reads from a RONIN database:
+
+- `RONIN_TOKEN` — Your RONIN App Token. The client loads it from this variable automatically, so no code-level configuration is needed.
+- `PORT` — The port the local server listens on. Defaults to the platform default if unset.
+- `BLADE_ENV` — Controls runtime behavior (e.g. distinguishing production from preview). Set automatically by most platforms.
+
+Deployment-specific variables (`VERCEL_GIT_COMMIT_REF`, `CF_PAGES_BRANCH`, `NETLIFY`, etc.) are read automatically when Blade detects those platforms — you don't set them manually.
